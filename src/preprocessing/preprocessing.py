@@ -210,3 +210,11 @@ def group_intake_condition(condition):
     else:
         return 'Other/Unknown'
 
+
+# For Testing
+def preprocess_data(df):
+    """Example preprocessing: fill NA and encode categoricals."""
+    df_cleaned = df.fillna(method='ffill')
+    return df_cleaned
+
+
