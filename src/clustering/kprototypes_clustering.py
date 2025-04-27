@@ -16,7 +16,8 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
         df[col] = df[col].astype(str)
     
     # Prepare matrix
-    matrix = df[numerical_features + categorical_features].to_numpy()
+    matrix_all = df[numerical_features + categorical_features].to_numpy()
+    matrix_numeric = df[numerical_features].to_numpy()
     
     # Find categorical indices
     cat_col_indices = [df.columns.get_loc(col) for col in categorical_features]
@@ -28,11 +29,11 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     mlflow_manager.start_run(run_name="k-prototypes-clustering")
 
     # Fit model
-    clusters = kproto.fit_predict(matrix, categorical=cat_col_indices)
+    clusters = kproto.fit_predict(matrix_all, categorical=[df.columns.get_loc(col) for col in categorical_features])
 
     # Evaluate clustering
-    silhouette = silhouette_score(matrix, clusters, metric='euclidean')
-
+    silhouette = silhouette_score(matrix_numeric, clusters, metric='euclidean')
+    
     # Log params and metrics
     mlflow_manager.log_params({
         "n_clusters": n_clusters,
