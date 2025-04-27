@@ -60,3 +60,11 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     print("K-Prototypes model and metrics logged successfully to MLflow.")
 
     return clusters, kproto
+
+def prepare_clustering_data(df, target_column=None, sample_size=30000, random_state=42):
+    """Prepare data for clustering by dropping target and sampling."""
+    if target_column and target_column in df.columns:
+        df = df.drop(columns=[target_column])
+    df_sample = df.sample(n=sample_size, random_state=random_state)
+    return df_sample
+
