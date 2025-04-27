@@ -57,17 +57,29 @@ def merge_latest_intake_outcome(df_intake, df_outcome):
         'breed': 'breed_intake', 'color': 'color_intake'
     })
 
-    final_outcome = final_outcome.rename(columns={
-        'name': 'name_outcome', 'datetime': 'datetime_outcome', 'monthyear': 'monthyear_outcome',
-        'date_of_birth': 'date_of_birth_outcome', 'outcome_type': 'outcome_type',
-        'outcome_subtype': 'outcome_subtype', 'animal_type': 'animal_type_outcome',
-        'sex_upon_outcome': 'sex_upon_outcome', 'age_upon_outcome': 'age_upon_outcome',
-        'breed': 'breed_outcome', 'color': 'color_outcome'
-    })
+    # Handle missing 'date_of_birth'
+    if 'date_of_birth' in final_outcome.columns:
+        final_outcome = final_outcome.rename(columns={
+            'name': 'name_outcome', 'datetime': 'datetime_outcome', 'monthyear': 'monthyear_outcome',
+            'date_of_birth': 'date_of_birth_outcome', 'outcome_type': 'outcome_type',
+            'outcome_subtype': 'outcome_subtype', 'animal_type': 'animal_type_outcome',
+            'sex_upon_outcome': 'sex_upon_outcome', 'age_upon_outcome': 'age_upon_outcome',
+            'breed': 'breed_outcome', 'color': 'color_outcome'
+        })
+    else:
+        final_outcome = final_outcome.rename(columns={
+            'name': 'name_outcome', 'datetime': 'datetime_outcome', 'monthyear': 'monthyear_outcome',
+            'outcome_type': 'outcome_type',
+            'outcome_subtype': 'outcome_subtype', 'animal_type': 'animal_type_outcome',
+            'sex_upon_outcome': 'sex_upon_outcome', 'age_upon_outcome': 'age_upon_outcome',
+            'breed': 'breed_outcome', 'color': 'color_outcome'
+        })
+        final_outcome['date_of_birth_outcome'] = pd.NaT  # Fill missing column manually
 
     # Merge
     animal_df = pd.merge(latest_intake, final_outcome, on='animal_id', how='inner')
     return animal_df
+
 
 def drop_unnecessary_columns(df):
     """Drop early unnecessary columns."""
