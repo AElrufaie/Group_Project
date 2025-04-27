@@ -1,0 +1,18 @@
+# Ignore the virtual environment folder
+is2_env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Jupyter Notebook checkpoints (if you use notebooks)
+.ipynb_checkpoints/
+
+# Ignore MLflow temporary stuff (optional if you use MLflow)
+mlruns/
+
+# Ignore system files (Mac and Windows)
+.DS_Store
+Thumbs.db
