@@ -1,3 +1,5 @@
+# src/modeling/hyperparameter_search.py
+
 import optuna
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
@@ -6,8 +8,13 @@ from catboost import CatBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
+# Import your MLflow manager
+from mlflow_management import mlflow_manager
+
 # Random Forest Tuning
 def tune_random_forest(trial, X_train, X_test, y_train, y_test):
+    mlflow_manager.start_run(run_name="RandomForest_Tuning")
+
     params = {
         'n_estimators': trial.suggest_int('n_estimators', 50, 500),
         'max_depth': trial.suggest_int('max_depth', 3, 20),
@@ -17,10 +24,19 @@ def tune_random_forest(trial, X_train, X_test, y_train, y_test):
     model = RandomForestClassifier(**params, random_state=42)
     model.fit(X_train, y_train)
     preds = model.predict(X_test)
-    return accuracy_score(y_test, preds)
+    accuracy = accuracy_score(y_test, preds)
+
+    mlflow_manager.log_params(params)
+    mlflow_manager.log_metrics({"accuracy": accuracy})
+    
+    mlflow_manager.end_run()
+
+    return accuracy
 
 # XGBoost Tuning
 def tune_xgboost(trial, X_train, X_test, y_train, y_test):
+    mlflow_manager.start_run(run_name="XGBoost_Tuning")
+
     params = {
         'learning_rate': trial.suggest_float('learning_rate', 0.005, 0.5),
         'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
@@ -32,10 +48,19 @@ def tune_xgboost(trial, X_train, X_test, y_train, y_test):
     model = XGBClassifier(**params, use_label_encoder=False, random_state=42, eval_metric='logloss')
     model.fit(X_train, y_train)
     preds = model.predict(X_test)
-    return accuracy_score(y_test, preds)
+    accuracy = accuracy_score(y_test, preds)
+
+    mlflow_manager.log_params(params)
+    mlflow_manager.log_metrics({"accuracy": accuracy})
+    
+    mlflow_manager.end_run()
+
+    return accuracy
 
 # LightGBM Tuning
 def tune_lightgbm(trial, X_train, X_test, y_train, y_test):
+    mlflow_manager.start_run(run_name="LightGBM_Tuning")
+
     params = {
         'objective': 'multiclass',
         'metric': 'multi_logloss',
@@ -55,10 +80,19 @@ def tune_lightgbm(trial, X_train, X_test, y_train, y_test):
     model = LGBMClassifier(**params, random_state=42, n_estimators=100)
     model.fit(X_train, y_train)
     preds = model.predict(X_test)
-    return accuracy_score(y_test, preds)
+    accuracy = accuracy_score(y_test, preds)
+
+    mlflow_manager.log_params(params)
+    mlflow_manager.log_metrics({"accuracy": accuracy})
+    
+    mlflow_manager.end_run()
+
+    return accuracy
 
 # Decision Tree Tuning
 def tune_decision_tree(trial, X_train, X_test, y_train, y_test):
+    mlflow_manager.start_run(run_name="DecisionTree_Tuning")
+
     params = {
         'criterion': trial.suggest_categorical('criterion', ['gini', 'entropy']),
         'splitter': trial.suggest_categorical('splitter', ['best', 'random']),
@@ -69,10 +103,19 @@ def tune_decision_tree(trial, X_train, X_test, y_train, y_test):
     model = DecisionTreeClassifier(**params, random_state=42)
     model.fit(X_train, y_train)
     preds = model.predict(X_test)
-    return accuracy_score(y_test, preds)
+    accuracy = accuracy_score(y_test, preds)
+
+    mlflow_manager.log_params(params)
+    mlflow_manager.log_metrics({"accuracy": accuracy})
+    
+    mlflow_manager.end_run()
+
+    return accuracy
 
 # CatBoost Tuning
 def tune_catboost(trial, X_train, X_test, y_train, y_test):
+    mlflow_manager.start_run(run_name="CatBoost_Tuning")
+
     params = {
         'loss_function': 'MultiClass',
         'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.3),
@@ -84,4 +127,11 @@ def tune_catboost(trial, X_train, X_test, y_train, y_test):
     model = CatBoostClassifier(**params, random_seed=42, verbose=0, eval_metric='Accuracy')
     model.fit(X_train, y_train)
     preds = model.predict(X_test)
-    return accuracy_score(y_test, preds)
+    accuracy = accuracy_score(y_test, preds)
+
+    mlflow_manager.log_params(params)
+    mlflow_manager.log_metrics({"accuracy": accuracy})
+    
+    mlflow_manager.end_run()
+
+    return accuracy
