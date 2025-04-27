@@ -6,7 +6,7 @@ import joblib
 import os
 
 # Import your MLflow manager
-from mlflow_management import mlflow_manager
+from src.mlflow_management import mlflow_manager
 
 def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     """Run K-Prototypes clustering and log everything to MLflow."""
