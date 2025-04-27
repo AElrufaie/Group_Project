@@ -1,1 +1,18 @@
+pandas
+numpy
+scikit-learn
+imbalanced-learn
+mlflow
+dowhy
+optuna
+xgboost
+lightgbm
+catboost
+shap
+plotly
+matplotlib
+seaborn
+kmodes
+joblib
+requests
 
