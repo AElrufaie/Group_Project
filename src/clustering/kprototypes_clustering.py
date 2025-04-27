@@ -1,34 +1,62 @@
-import mlflow
-import mlflow.sklearn
+# src/clustering/kprototypes_clustering.py
+
 from kmodes.kprototypes import KPrototypes
 from sklearn.metrics import silhouette_score
+import joblib
+import os
+
+# Import your MLflow manager
+from mlflow_management import mlflow_manager
 
 def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
-    """Run K-Prototypes clustering and log to MLflow."""
-    
+    """Run K-Prototypes clustering and log everything to MLflow."""
+
     # Convert categorical columns to string
     for col in categorical_features:
         df[col] = df[col].astype(str)
     
-    matrix = df[numerical_features + categorical_features].to_numpy()  
+    # Prepare matrix
+    matrix = df[numerical_features + categorical_features].to_numpy()
     
-    # Find categorical indices 
+    # Find categorical indices
     cat_col_indices = [df.columns.get_loc(col) for col in categorical_features]
 
+    # Initialize model
     kproto = KPrototypes(n_clusters=n_clusters, init='Cao', verbose=2)
 
-    with mlflow.start_run(run_name="k-prototypes-clustering"):
-        clusters = kproto.fit_predict(matrix, categorical=cat_col_indices)
-        
-        silhouette = silhouette_score(matrix, clusters, metric='euclidean')  
-        mlflow.log_metric("silhouette_score", silhouette)
-        
-        mlflow.log_param("n_clusters", n_clusters)
-        
-        import joblib
-        joblib.dump(kproto, "kproto_model.pkl")
-        mlflow.log_artifact("kproto_model.pkl")
-        
-        print("✅ Logged clustering model and metrics to MLflow.")
-    
+    # Start MLflow tracking
+    mlflow_manager.start_run(run_name="k-prototypes-clustering")
+
+    # Fit model
+    clusters = kproto.fit_predict(matrix, categorical=cat_col_indices)
+
+    # Evaluate clustering
+    silhouette = silhouette_score(matrix, clusters, metric='euclidean')
+
+    # Log params and metrics
+    mlflow_manager.log_params({
+        "n_clusters": n_clusters,
+        "init": "Cao",
+        "categorical_columns": ", ".join(categorical_features)
+    })
+    mlflow_manager.log_metrics({
+        "silhouette_score": silhouette
+    })
+
+    # Save model locally
+    model_filename = "kproto_model.pkl"
+    joblib.dump(kproto, model_filename)
+
+    # Log model artifact
+    mlflow_manager.log_artifact(model_filename, artifact_subdir="kproto_model")
+
+    # End MLflow run
+    mlflow_manager.end_run()
+
+    # Optional: remove temp file to stay clean
+    if os.path.exists(model_filename):
+        os.remove(model_filename)
+
+    print("K-Prototypes model and metrics logged successfully to MLflow.")
+
     return clusters, kproto
