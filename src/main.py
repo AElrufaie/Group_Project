@@ -97,18 +97,12 @@ def main():
     # --- Step 4: Prepare for modeling ---
     print("🛠 Preparing train/test data...")
 
-    X = df_encoded.drop(columns=['outcome_group'])
+    X = df_encoded.drop(columns=['outcome_group','name_intake', 'name_outcome'])
     y = df_encoded['outcome_group']
 
     X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-
-
-    # Find which columns contain 'A906892'
-    for col in X_train_full.columns:
-        if X_train_full[col].astype(str).str.contains('A906892').any():
-            print(f"Value 'A906892' found in column: {col}")
 
     # Apply SMOTE-Tomek
     print("🔧 Applying SMOTE-Tomek...")
