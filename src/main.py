@@ -70,20 +70,20 @@ def main():
 
     print(f"✅ Preprocessing complete. Dataset shape: {df.shape}")
 
-    # # --- Step 2: Causal Inference ---
-    # print("🧠 Running causal inference analysis...")
+    # --- Step 2: Causal Inference ---
+    print("🧠 Running causal inference analysis...")
 
-    # df1 = pd.read_csv("data/animal_df.csv")
+    df1 = pd.read_csv("data/animal_df.csv")
 
-    # treatment = "age_days_outcome"
-    # outcome = "los_at_shelter"
-    # common_causes = ["animal_type", "breed_type", "intake_condition_group"]
+    treatment = "age_days_outcome"
+    outcome = "los_at_shelter"
+    common_causes = ["animal_type", "breed_type", "intake_condition_group"]
 
-    # causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
-    #     df1, treatment, outcome, common_causes
-    # )
+    causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
+        df1, treatment, outcome, common_causes
+    )
 
-    # print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
+    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
 
     # --- Step 3: Encoding ---
     print("🔤 Applying encoding...")
@@ -103,10 +103,12 @@ def main():
     X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-
+    print('X_train_full shape = 'X_train_full.shape)
+    
     # Apply SMOTE-Tomek
     print("🔧 Applying SMOTE-Tomek...")
     X_train_bal, y_train_bal = apply_smote(X_train_full, y_train_full)
+    print('X_train_bal shape = 'X_train_bal.shape)
 
     # --- Step 5: Modeling ---
     print("🌳 Training Random Forest...")
