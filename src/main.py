@@ -72,9 +72,16 @@ from sklearn.preprocessing import LabelEncoder
 
     # --- Step 2: Causal Inference ---
     print("Running causal inference analysis...")
+<<<<<<< HEAD
     treatment = "is_fixed"
     outcome = "outcome_group"
     common_causes = ["age_group_intake", "breed_type", "color_group"]
+=======
+
+    treatment = "age_days_outcome"
+    outcome = "los_at_shelter"
+    common_causes = [ "animal_type", "breed_type", "intake_condition_group"]
+>>>>>>> cd56d43e196b7ddeede2f0621bcf1ecf4b3cada6
 
     columns_for_causal = [treatment, outcome] + common_causes
     df_causal = df[columns_for_causal].dropna()
