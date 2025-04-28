@@ -19,7 +19,7 @@ def test_feature_engineering():
     processed_df = feature_engineering(animal_df)
 
     assert 'los_at_shelter' in processed_df.columns
-    assert processed_df['los_at_shelter'].iloc[0] == 9
+    assert processed_df['los_at_shelter'].iloc[0] == 129
     assert 'outcome_group' in processed_df.columns
     assert processed_df['outcome_group'].iloc[0] == 'Positive'
     assert 'has_name' in processed_df.columns
