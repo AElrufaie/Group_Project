@@ -103,12 +103,12 @@ def main():
     X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-    print('X_train_full shape = 'X_train_full.shape)
+    print('X_train_full shape = ', X_train_full.shape)
     
     # Apply SMOTE-Tomek
     print("🔧 Applying SMOTE-Tomek...")
     X_train_bal, y_train_bal = apply_smote(X_train_full, y_train_full)
-    print('X_train_bal shape = 'X_train_bal.shape)
+    print('X_train_bal shape = ', X_train_bal.shape)
 
     # --- Step 5: Modeling ---
     print("🌳 Training Random Forest...")
