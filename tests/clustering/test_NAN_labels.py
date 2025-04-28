@@ -17,6 +17,6 @@ def test_no_nan_in_clusters():
                              "month_of_outcome", "is_fixed", "breed_type", 
                              "color_group", "intake_condition_group"]
 
-    clusters, model = run_kprototypes(df, numerical_features, categorical_features, n_clusters=3)
+    clusters, model = run_kprototypes(df, numerical_features, categorical_features, n_clusters=5)
 
     assert not any(pd.isnull(clusters))
