@@ -7,6 +7,9 @@ import dowhy
 from dowhy import CausalModel
 import mlflow
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 def create_causal_model(df, treatment, outcome, common_causes):
     """Create and return a CausalModel object."""
     model = CausalModel(

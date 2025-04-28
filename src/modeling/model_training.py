@@ -28,7 +28,7 @@ def train_random_forest(X_train, y_train, best_params):
     model.fit(X_train, y_train)
 
     mlflow_manager.log_params(best_params)
-    mlflow_manager.log_model(model, model_name="random_forest_model")
+    mlflow_manager.log_model(model, model_name="random_forest_model", X_train=X_train, y_train=y_train)
     
     mlflow_manager.end_run()
     return model
@@ -41,7 +41,7 @@ def train_xgboost(X_train, y_train, best_params):
     model.fit(X_train, y_train)
 
     mlflow_manager.log_params(best_params)
-    mlflow_manager.log_model(model, model_name="xgboost_model")
+    mlflow_manager.log_model(model, model_name="xgboost_model", X_train=X_train, y_train=y_train)
     
     mlflow_manager.end_run()
     return model
@@ -54,7 +54,7 @@ def train_lightgbm(X_train, y_train, best_params):
     model.fit(X_train, y_train)
 
     mlflow_manager.log_params(best_params)
-    mlflow_manager.log_model(model, model_name="lightgbm_model")
+    mlflow_manager.log_model(model, model_name="lightgbm_model", X_train=X_train, y_train=y_train)
     
     mlflow_manager.end_run()
     return model
@@ -67,7 +67,7 @@ def train_catboost(X_train, y_train, best_params):
     model.fit(X_train, y_train)
 
     mlflow_manager.log_params(best_params)
-    mlflow_manager.log_model(model, model_name="catboost_model")
+    mlflow_manager.log_model(model, model_name="catboost_model", X_train=X_train, y_train=y_train)
     
     mlflow_manager.end_run()
     return model
@@ -80,7 +80,7 @@ def train_decision_tree(X_train, y_train, best_params):
     model.fit(X_train, y_train)
 
     mlflow_manager.log_params(best_params)
-    mlflow_manager.log_model(model, model_name="decision_tree_model")
+    mlflow_manager.log_model(model, model_name="decision_tree_model", X_train=X_train, y_train=y_train)
     
     mlflow_manager.end_run()
     return model
@@ -88,8 +88,6 @@ def train_decision_tree(X_train, y_train, best_params):
 # For Testing
 def train_model(X_train, y_train, X_val, y_val, params):
     """Train a model and return it."""
-    from sklearn.ensemble import RandomForestClassifier
     model = RandomForestClassifier(**params)
     model.fit(X_train, y_train)
     return model
-
