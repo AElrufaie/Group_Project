@@ -88,6 +88,7 @@ def main():
     # --- Step 3: Encoding ---
     print("🔤 Applying encoding...")
 
+    df = df.drop(columns=["animal_id"])
     label_encode_cols = [
         'age_group_intake', 'breed_type', 'color_group', 
         'intake_condition_group', 'animal_type', 'month_of_outcome'
