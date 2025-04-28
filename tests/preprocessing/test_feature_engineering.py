@@ -1,3 +1,4 @@
+import pandas as pd
 from src.preprocessing.preprocessing import feature_engineering
 
 def test_feature_engineering():
