@@ -71,19 +71,17 @@ def main():
     print(f"✅ Preprocessing complete. Dataset shape: {df.shape}")
 
      # --- Step 2: Causal Inference ---
-    print("🧠 Running causal inference analysis...")
+    # print("🧠 Running causal inference analysis...")
 
-    # df1 = pd.read_csv("data/animal_df.csv")
+    # treatment = "age_days_outcome"
+    # outcome = "los_at_shelter"
+    # common_causes = ["animal_type", "breed_type", "intake_condition_group"]
 
-    treatment = "age_days_outcome"
-    outcome = "los_at_shelter"
-    common_causes = ["animal_type", "breed_type", "intake_condition_group"]
+    # causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
+    #     df, treatment, outcome, common_causes
+    # )
 
-    causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
-        df, treatment, outcome, common_causes
-    )
-
-    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
+    # print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
 
     # --- Step 3: Encoding ---
     # print("🔤 Applying encoding...")
