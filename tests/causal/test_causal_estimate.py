@@ -1,3 +1,4 @@
+import pandas as pd
 from src.causal_inference.causal_analysis import create_causal_model, estimate_causal_effect
 
 def test_estimate_causal_effect():
