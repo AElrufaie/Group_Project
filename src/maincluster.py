@@ -71,39 +71,39 @@ def main():
     print(f"✅ Preprocessing complete. Dataset shape: {df.shape}")
 
      # --- Step 2: Causal Inference ---
-    # print("🧠 Running causal inference analysis...")
+    print("🧠 Running causal inference analysis...")
 
     # df1 = pd.read_csv("data/animal_df.csv")
 
-    # treatment = "age_days_outcome"
-    # outcome = "los_at_shelter"
-    # common_causes = ["animal_type", "breed_type", "intake_condition_group"]
+    treatment = "age_days_outcome"
+    outcome = "los_at_shelter"
+    common_causes = ["animal_type", "breed_type", "intake_condition_group"]
 
-    # causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
-    #     df1, treatment, outcome, common_causes
-    # )
+    causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
+        df1, treatment, outcome, common_causes
+    )
 
-    # print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}") *)
+    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}") *)
 
     # --- Step 3: Encoding ---
-    print("🔤 Applying encoding...")
+    # print("🔤 Applying encoding...")
     
-    label_encode_cols = [
-        'age_group_intake', 'breed_type', 'color_group', 
-        'intake_condition_group', 'animal_type', 'month_of_outcome'
-    ]
-    df_encoded, label_encoders = label_encode_columns(df, label_encode_cols)
+    # label_encode_cols = [
+    #     'age_group_intake', 'breed_type', 'color_group', 
+    #     'intake_condition_group', 'animal_type', 'month_of_outcome'
+    # ]
+    # df_encoded, label_encoders = label_encode_columns(df, label_encode_cols)
 
     # --- Step 4: Prepare for modeling ---
-    print("🛠 Preparing train/test data...")
+    # print("🛠 Preparing train/test data...")
 
-    X = df_encoded.drop(columns=['outcome_group','name_intake', 'name_outcome'])
-    y = df_encoded['outcome_group']
+    # X = df_encoded.drop(columns=['outcome_group','name_intake', 'name_outcome'])
+    # y = df_encoded['outcome_group']
 
-    X_train_full, X_test, y_train_full, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-    print('X_train_full shape = ', X_train_full.shape)
+    # X_train_full, X_test, y_train_full, y_test = train_test_split(
+    #     X, y, test_size=0.2, random_state=42
+    # )
+    # print('X_train_full shape = ', X_train_full.shape)
     
      # Apply SMOTE-Tomek
     # print("🔧 Applying SMOTE-Tomek...")
@@ -133,12 +133,30 @@ def main():
     # print(f"🏆 Stacking Model Accuracy: {stacking_accuracy:.4f}")
  
     # --- Step 7: Clustering ---
-    print("🔍 Running K-Prototypes clustering...")
+    print("🔍 Running K-Prototypes clustering on full clean dataset...")
 
     numerical_features = ["los_at_shelter", "age_days_outcome"]
-    categorical_features = ["animal_type", "color_group", "breed_type"]
+    categorical_features = ["animal_type", "has_name", "age_group_intake", 
+                        "month_of_outcome", "is_fixed", "breed_type", 
+                        "color_group", "intake_condition_group"]
 
-    clusters, kproto_model = run_kprototypes(X_train_full, numerical_features, categorical_features)
+    clusters, kproto_model = run_kprototypes(df, numerical_features, categorical_features)
+
+    # Save the clustered dataset
+    df['kprototypes_cluster'] = clusters
+    df.to_csv(os.path.join(DATA_FOLDER, "animal_df_with_clusters.csv"), index=False)
+    print("✅ Clustered data saved as 'animal_df_with_clusters.csv'")
+
+    # ✅ Compute silhouette score manually here
+    from sklearn.metrics import silhouette_score
+
+    silhouette = silhouette_score(
+        df[numerical_features],  # only numerical features
+        clusters,
+        metric="euclidean"
+    )
+
+    print(f"✅ Silhouette Score for Clustering: {silhouette:.4f}")
 
     print("\n🎯 FULL PIPELINE SUCCESSFULLY COMPLETED. 🚀")
 
