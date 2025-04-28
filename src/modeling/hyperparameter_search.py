@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
 # Import your MLflow manager
-from src.mlflow_management import mlflow_manager
+from mlflow_management import mlflow_manager
 
 # Random Forest Tuning
 def tune_random_forest(trial, X_train, X_test, y_train, y_test):

@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 import joblib
 
 # Import your MLflow manager
-from src.mlflow_management import mlflow_manager
+from mlflow_management import mlflow_manager
 
 # Train a Stacking Classifier
 def train_stacking(meta_model, base_models, X_train, y_train, cv=5):

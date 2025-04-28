@@ -7,6 +7,25 @@ import requests
 from io import StringIO
 import os
 
+
+def load_or_fetch_data(data_folder, base_url_1, base_url_2):
+    """
+    Try to load local data. If not found, fetch from web and save locally.
+    Returns: df_intake, df_outcome
+    """
+    intake_path = os.path.join(data_folder, "intake_raw.csv")
+    outcome_path = os.path.join(data_folder, "outcome_raw.csv")
+
+    if os.path.exists(intake_path) and os.path.exists(outcome_path):
+        df_intake = pd.read_csv(intake_path)
+        df_outcome = pd.read_csv(outcome_path)
+    else:
+        df_intake, df_outcome = fetch_data(base_url_1, base_url_2)
+        os.makedirs(data_folder, exist_ok=True)
+        df_intake.to_csv(intake_path, index=False)
+        df_outcome.to_csv(outcome_path, index=False)
+    return df_intake, df_outcome
+
 # --- Fetching Data ---
 def fetch_data_from_web(base_url, limit=1000):
     offset = 0
@@ -30,6 +49,16 @@ def fetch_data_from_web(base_url, limit=1000):
 
     final_df = pd.concat(all_data, ignore_index=True)
     return final_df
+
+# --- Fetch Intake and Outcome Smartly (local first) ---
+# --- Fetch intake and outcome together ---
+def fetch_data(base_url_1, base_url_2):
+    """Fetch both intake and outcome datasets."""
+    intake_df = fetch_data_from_web(base_url_2)
+    outcome_df = fetch_data_from_web(base_url_1)
+    return intake_df, outcome_df
+
+
 
 # --- Robust Datetime Parsing ---
 def robust_datetime_parsing(df, column_name):
@@ -224,9 +253,6 @@ def group_intake_condition(condition):
         return 'Behavioral Issues'
     if condition in ['neonatal', 'nursing', 'aged', 'pregnant']:
         return 'Life Stage/Developmental'
-<<<<<<< HEAD
-    return 'Other/Unknown'
-=======
     else:
         return 'Other/Unknown'
 
@@ -238,4 +264,3 @@ def preprocess_data(df):
     return df_cleaned
 
 
->>>>>>> b2f21422a3f38c119d23288b66ce0a1994d9e6b1
