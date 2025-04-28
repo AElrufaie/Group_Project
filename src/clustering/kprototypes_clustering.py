@@ -6,7 +6,7 @@ import joblib
 import os
 
 # Import your MLflow manager
-from mlflow_management import mlflow_manager
+from src.mlflow_management import mlflow_manager
 
 def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     """Run K-Prototypes clustering and log everything to MLflow."""
@@ -16,7 +16,8 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
         df[col] = df[col].astype(str)
     
     # Prepare matrix
-    matrix = df[numerical_features + categorical_features].to_numpy()
+    matrix_all = df[numerical_features + categorical_features].to_numpy()
+    matrix_numeric = df[numerical_features].to_numpy()
     
     # Find categorical indices
     cat_col_indices = [df.columns.get_loc(col) for col in categorical_features]
@@ -28,11 +29,11 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     mlflow_manager.start_run(run_name="k-prototypes-clustering")
 
     # Fit model
-    clusters = kproto.fit_predict(matrix, categorical=cat_col_indices)
+    clusters = kproto.fit_predict(matrix_all, categorical=[df.columns.get_loc(col) for col in categorical_features])
 
     # Evaluate clustering
-    silhouette = silhouette_score(matrix, clusters, metric='euclidean')
-
+    silhouette = silhouette_score(matrix_numeric, clusters, metric='euclidean')
+    
     # Log params and metrics
     mlflow_manager.log_params({
         "n_clusters": n_clusters,
@@ -60,3 +61,11 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     print("K-Prototypes model and metrics logged successfully to MLflow.")
 
     return clusters, kproto
+
+def prepare_clustering_data(df, target_column=None, sample_size=30000, random_state=42):
+    """Prepare data for clustering by dropping target and sampling."""
+    if target_column and target_column in df.columns:
+        df = df.drop(columns=[target_column])
+    df_sample = df.sample(n=sample_size, random_state=random_state)
+    return df_sample
+

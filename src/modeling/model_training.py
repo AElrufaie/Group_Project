@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from imblearn.combine import SMOTETomek
 
 # Import your MLflow manager
-from mlflow_management import mlflow_manager
+from src.mlflow_management import mlflow_manager
 
 # Apply SMOTE-Tomek for Balancing
 def apply_smote(X, y):
@@ -84,3 +84,12 @@ def train_decision_tree(X_train, y_train, best_params):
     
     mlflow_manager.end_run()
     return model
+
+# For Testing
+def train_model(X_train, y_train, X_val, y_val, params):
+    """Train a model and return it."""
+    from sklearn.ensemble import RandomForestClassifier
+    model = RandomForestClassifier(**params)
+    model.fit(X_train, y_train)
+    return model
+

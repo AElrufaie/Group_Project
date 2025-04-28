@@ -224,4 +224,18 @@ def group_intake_condition(condition):
         return 'Behavioral Issues'
     if condition in ['neonatal', 'nursing', 'aged', 'pregnant']:
         return 'Life Stage/Developmental'
+<<<<<<< HEAD
     return 'Other/Unknown'
+=======
+    else:
+        return 'Other/Unknown'
+
+
+# For Testing
+def preprocess_data(df):
+    """Example preprocessing: fill NA and encode categoricals."""
+    df_cleaned = df.fillna(method='ffill')
+    return df_cleaned
+
+
+>>>>>>> b2f21422a3f38c119d23288b66ce0a1994d9e6b1
