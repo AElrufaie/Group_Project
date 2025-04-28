@@ -78,7 +78,7 @@ def main():
     df = final_cleaning(animal_df)
 
     # Save cleaned dataset
-    save_clean_data(df, filename=os.path.join(data_dir, "animal_df_clean.csv"))
+    save_clean_data(df, filename=os.path.join(data_dir, "animal_df.csv"))
 
     print(f"Preprocessing complete. Dataset shape: {df.shape}")
 
