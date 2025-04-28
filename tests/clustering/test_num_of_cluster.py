@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+from src.clustering.kprototypes_clustering import run_kprototypes
+
 def test_unique_clusters_reasonable():
     df = pd.DataFrame({
         'los_at_shelter': np.random.randint(1, 30, 80),
