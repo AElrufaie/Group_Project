@@ -80,7 +80,7 @@ def main():
     common_causes = ["animal_type", "breed_type", "intake_condition_group"]
 
     causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
-        df1, treatment, outcome, common_causes
+        df, treatment, outcome, common_causes
     )
 
     print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
