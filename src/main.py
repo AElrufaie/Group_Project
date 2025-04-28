@@ -17,7 +17,7 @@ from modeling.encoding import (
 )
 
 # Causal Inference
-from causal_inference.causal_analysis import causal_inference_pipeline
+from src.causal_inference.causal_analysis import causal_inference_pipeline
 
 # Modeling
 from modeling.model_training import (
@@ -72,28 +72,27 @@ from sklearn.preprocessing import LabelEncoder
 
     # --- Step 2: Causal Inference ---
     print("Running causal inference analysis...")
-<<<<<<< HEAD
-    treatment = "is_fixed"
-    outcome = "outcome_group"
-    common_causes = ["age_group_intake", "breed_type", "color_group"]
-=======
+    # Load your dataset from the data folder
+    df1 = pd.read_csv("data/animal_df.csv")
 
+    # Define the columns for causal analysis
     treatment = "age_days_outcome"
     outcome = "los_at_shelter"
-    common_causes = [ "animal_type", "breed_type", "intake_condition_group"]
->>>>>>> cd56d43e196b7ddeede2f0621bcf1ecf4b3cada6
+    common_causes = [
+        "animal_type",
+        "breed_type",
+        "intake_condition_group"
+    ]
 
-    columns_for_causal = [treatment, outcome] + common_causes
-    df_causal = df[columns_for_causal].dropna()
+    # Run causal inference pipeline
+    causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
+        df1,
+        treatment,
+        outcome,
+        common_causes
+    )
 
-    # Apply Label Encoding for causal inference
-    encoder = LabelEncoder()
-    for col in df_causal.columns:
-        if df_causal[col].dtype == 'object' or df_causal[col].dtype.name == 'category':
-            df_causal[col] = encoder.fit_transform(df_causal[col])
-
-    # Now safe to run causal inference
-    causal_estimate = causal_inference_pipeline(df_causal, treatment, outcome, common_causes)
+    print(f"Final Causal Effect Estimate: {causal_estimate.value}")
 
 
 
