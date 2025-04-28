@@ -70,20 +70,20 @@ def main():
 
     print(f"✅ Preprocessing complete. Dataset shape: {df.shape}")
 
-(*     # --- Step 2: Causal Inference ---
-    print("🧠 Running causal inference analysis...")
+     # --- Step 2: Causal Inference ---
+    # print("🧠 Running causal inference analysis...")
 
-    df1 = pd.read_csv("data/animal_df.csv")
+    # df1 = pd.read_csv("data/animal_df.csv")
 
-    treatment = "age_days_outcome"
-    outcome = "los_at_shelter"
-    common_causes = ["animal_type", "breed_type", "intake_condition_group"]
+    # treatment = "age_days_outcome"
+    # outcome = "los_at_shelter"
+    # common_causes = ["animal_type", "breed_type", "intake_condition_group"]
 
-    causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
-        df1, treatment, outcome, common_causes
-    )
+    # causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
+    #     df1, treatment, outcome, common_causes
+    # )
 
-    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}") *)
+    # print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}") *)
 
     # --- Step 3: Encoding ---
     print("🔤 Applying encoding...")
@@ -105,33 +105,33 @@ def main():
     )
     print('X_train_full shape = ', X_train_full.shape)
     
-(*     # Apply SMOTE-Tomek
-    print("🔧 Applying SMOTE-Tomek...")
-    X_train_bal, y_train_bal = apply_smote(X_train_full, y_train_full)
-    print('X_train_bal shape = ', X_train_bal.shape)
+     # Apply SMOTE-Tomek
+    # print("🔧 Applying SMOTE-Tomek...")
+    # X_train_bal, y_train_bal = apply_smote(X_train_full, y_train_full)
+    # print('X_train_bal shape = ', X_train_bal.shape)
 
     # --- Step 5: Modeling ---
-    print("🌳 Training Random Forest...")
+    # print("🌳 Training Random Forest...")
 
-    best_params = {
-        "n_estimators": 100,
-        "max_depth": 10,
-        "min_samples_split": 2,
-        "min_samples_leaf": 1
-    }
-    rf_model = train_random_forest(X_train_bal, y_train_bal, best_params)
+    # best_params = {
+    #     "n_estimators": 100,
+    #     "max_depth": 10,
+    #     "min_samples_split": 2,
+    #     "min_samples_leaf": 1
+    # }
+    # rf_model = train_random_forest(X_train_bal, y_train_bal, best_params)
 
     # --- Step 6: Stacking ---
-    print("⚡ Training stacking model...")
+    # print("⚡ Training stacking model...")
 
-    base_models = [("rf", rf_model)]
-    meta_model = LogisticRegression()
-    stacking_model = train_stacking(meta_model, base_models, X_train_bal, y_train_bal)
+    # base_models = [("rf", rf_model)]
+    # meta_model = LogisticRegression()
+    # stacking_model = train_stacking(meta_model, base_models, X_train_bal, y_train_bal)
 
-    print("✅ Evaluating stacking model...")
-    stacking_accuracy = evaluate_stacking(stacking_model, X_test, y_test)
-    print(f"🏆 Stacking Model Accuracy: {stacking_accuracy:.4f}")
- *)
+    # print("✅ Evaluating stacking model...")
+    # stacking_accuracy = evaluate_stacking(stacking_model, X_test, y_test)
+    # print(f"🏆 Stacking Model Accuracy: {stacking_accuracy:.4f}")
+ 
     # --- Step 7: Clustering ---
     print("🔍 Running K-Prototypes clustering...")
 
