@@ -8,33 +8,39 @@ import os
 # Import your MLflow manager
 from src.mlflow_management import mlflow_manager
 
+# --- K-Prototypes Function ---
 def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
     """Run K-Prototypes clustering and log everything to MLflow."""
 
-    # Convert categorical columns to string
+    # ✅ 1. Convert categorical columns to string
     for col in categorical_features:
         df[col] = df[col].astype(str)
-    
-    # Prepare matrix
+
+    # ✅ 2. Prepare matrices
     matrix_all = df[numerical_features + categorical_features].to_numpy()
     matrix_numeric = df[numerical_features].to_numpy()
-    
-    # Find categorical indices
-    cat_col_indices = [df.columns.get_loc(col) for col in categorical_features]
 
-    # Initialize model
+    # ✅ 3. Find categorical indices relative to matrix_all
+    cat_col_indices = list(range(len(numerical_features), len(numerical_features) + len(categorical_features)))
+
+    # ✅ 4. Initialize K-Prototypes
     kproto = KPrototypes(n_clusters=n_clusters, init='Cao', verbose=2)
 
-    # Start MLflow tracking
+    # ✅ 5. Start MLflow run
     mlflow_manager.start_run(run_name="k-prototypes-clustering")
 
-    # Fit model
-    clusters = kproto.fit_predict(matrix_all, categorical=[df.columns.get_loc(col) for col in categorical_features])
+    # ✅ 6. Fit model
+    clusters = kproto.fit_predict(matrix_all, categorical=cat_col_indices)
 
-    # Evaluate clustering
-    silhouette = silhouette_score(matrix_numeric, clusters, metric='euclidean')
-    
-    # Log params and metrics
+    # ✅ 7. Evaluate clustering
+    try:
+        silhouette = silhouette_score(matrix_numeric, clusters, metric='euclidean')
+        print(f"✅ Silhouette Score: {silhouette:.4f}")
+    except Exception as e:
+        print(f"⚠️ Silhouette score calculation failed: {e}")
+        silhouette = -1
+
+    # ✅ 8. Log parameters and metrics to MLflow
     mlflow_manager.log_params({
         "n_clusters": n_clusters,
         "init": "Cao",
@@ -44,28 +50,40 @@ def run_kprototypes(df, numerical_features, categorical_features, n_clusters=5):
         "silhouette_score": silhouette
     })
 
-    # Save model locally
+    # ✅ 9. Save model locally
     model_filename = "kproto_model.pkl"
     joblib.dump(kproto, model_filename)
 
-    # Log model artifact
-    mlflow_manager.log_artifact(model_filename, artifact_subdir="kproto_model")
+    # ✅ 10. Save clustered data locally
+    clustered_df = df.copy()
+    clustered_df['kprototypes_cluster'] = clusters
+    clustered_filename = "animal_df_with_clusters.csv"
+    clustered_df.to_csv(clustered_filename, index=False)
 
-    # End MLflow run
+    # ✅ 11. Log model and data artifacts to MLflow
+    mlflow_manager.log_artifact(model_filename, artifact_subdir="kproto_model")
+    mlflow_manager.log_artifact(clustered_filename, artifact_subdir="clustered_data")
+
+    # ✅ 12. End MLflow run
     mlflow_manager.end_run()
 
-    # Optional: remove temp file to stay clean
-    if os.path.exists(model_filename):
-        os.remove(model_filename)
+    # ✅ 13. Clean up temp files
+    for file in [model_filename, clustered_filename]:
+        if os.path.exists(file):
+            os.remove(file)
 
-    print("K-Prototypes model and metrics logged successfully to MLflow.")
+    print("✅ K-Prototypes model and clustered data successfully logged to MLflow.")
 
     return clusters, kproto
-
-def prepare_clustering_data(df, target_column=None, sample_size=30000, random_state=42):
-    """Prepare data for clustering by dropping target and sampling."""
+    
+# --- Optional Sampling Function ---
+def prepare_clustering_data(df, target_column=None, sample_size=None, random_state=42):
+    """Prepare data for clustering by optionally dropping target and sampling."""
     if target_column and target_column in df.columns:
         df = df.drop(columns=[target_column])
-    df_sample = df.sample(n=sample_size, random_state=random_state)
-    return df_sample
+    if sample_size is not None and sample_size < len(df):
+        df_sample = df.sample(n=sample_size, random_state=random_state)
+        return df_sample
+    else:
+        return df  # Return full dataset if no sampling requested
 
