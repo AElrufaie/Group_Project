@@ -8,6 +8,7 @@ def test_feature_engineering():
         'datetime_outcome': pd.to_datetime(['2022-05-10T10:00:00']),
         'name_intake': ['Doggo'],
         'outcome_type': ['Adoption'],
+        'animal_type_outcome': ['Dog'],
         'sex_upon_outcome': ['Neutered Male'],
         'breed_intake': ['Labrador Mix'],
         'color_intake': ['Black'],
