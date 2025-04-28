@@ -15,3 +15,4 @@ seaborn
 kmodes
 joblib
 requests
+pytest
