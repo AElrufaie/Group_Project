@@ -1,3 +1,4 @@
+import pandas as pd
 from src.causal_inference.causal_analysis import causal_inference_pipeline
 
 def test_causal_inference_pipeline():
