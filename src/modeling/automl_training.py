@@ -4,7 +4,7 @@ import h2o
 from h2o.automl import H2OAutoML
 import pandas as pd
 
-# Import mlflow manager (your team's module)
+# Import mlflow manager utilities
 from src.mlflow_management.mlflow_manager import (
     start_run,
     log_params,
@@ -54,7 +54,7 @@ print(f"✅ Best model saved to: {model_save_path}")
 # --- Evaluate Best Model on Test Set ---
 perf = aml.leader.model_performance(test_data=test)
 hit_ratio_table = perf.hit_ratio_table()
-top1_accuracy = hit_ratio_table.cell_values[1][1]  # Top-1 accuracy (normal accuracy)
+top1_accuracy = hit_ratio_table.cell_values[1][1]  # Top-1 accuracy
 
 # --- Print Evaluation Metrics ---
 print("\n=== Best Model Performance on Test Set ===")
@@ -64,13 +64,19 @@ print(f"Logloss: {perf.logloss():.4f}")
 print("Confusion Matrix:")
 print(perf.confusion_matrix())
 
+# --- Extract and Print Best Model Hyperparameters ---
+print("\n=== Best Model Hyperparameters ===")
+best_model_params = aml.leader.get_params()
+for param, value in best_model_params.items():
+    print(f"{param}: {value}")
+
 # --- Track Everything via mlflow_manager ---
 print("\n🚀 Logging model and metrics to MLflow via mlflow_manager...")
 
 # Start MLflow run
 start_run(run_name="H2O_AutoML_Run")
 
-# Log parameters if needed
+# Log AutoML configuration (basic)
 params = {
     "max_models": 10,
     "max_runtime_secs": 600,
@@ -79,7 +85,7 @@ params = {
 }
 log_params(params)
 
-# Log metrics
+# Log evaluation metrics
 metrics = {
     "accuracy": top1_accuracy,
     "mean_per_class_error": perf.mean_per_class_error(),
@@ -87,13 +93,13 @@ metrics = {
 }
 log_metrics(metrics)
 
-# Log model
+# Log model artifact
 log_artifact(model_save_path, artifact_subdir="h2o_automl_model")
 
 # End MLflow run
 end_run()
 
-print("✅ MLflow logging complete using mlflow_manager!")
+print("✅ MLflow logging complete!")
 
 # --- Shutdown H2O cleanly ---
 h2o.cluster().shutdown()
