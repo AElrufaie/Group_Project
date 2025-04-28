@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from imblearn.combine import SMOTETomek
 
 # Import your MLflow manager
-from mlflow_management import mlflow_manager
+from src.mlflow_management import mlflow_manager
 
 # Apply SMOTE-Tomek for Balancing
 def apply_smote(X, y):
