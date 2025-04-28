@@ -95,9 +95,9 @@ def main():
     # 3. Causal Inference
     print("Running causal inference analysis...")
 
-    treatment = "is_fixed"
-    outcome = "outcome_group"
-    common_causes = ["age_group_intake", "breed_type", "color_group"]
+    treatment = "age_days_outcome"
+    outcome = "los_at_shelter"
+    common_causes = [ "animal_type", "breed_type", "intake_condition_group"]
 
     # Prepare numeric-only data
     numeric_cols = df_encoded.select_dtypes(include=[np.number]).columns.tolist()
