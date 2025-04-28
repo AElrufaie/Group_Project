@@ -97,8 +97,8 @@ def main():
     # --- Step 4: Prepare for modeling ---
     print("🛠 Preparing train/test data...")
 
-    X = df_encoded.drop(columns=[outcome])
-    y = df_encoded[outcome]
+    X = df_encoded.drop(columns=['outcome_group'])
+    y = df_encoded['outcome_group']
 
     X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
