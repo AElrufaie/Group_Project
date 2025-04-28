@@ -50,6 +50,20 @@ def log_model(model, model_name: str = "model", X_train=None, y_train=None):
     else:
         mlflow.sklearn.log_model(model, artifact_path=model_name)
 
+def log_artifact(local_path: str, artifact_subdir: str = None):
+    """
+    Log a local file or directory as an MLflow artifact.
+
+    Args:
+        local_path (str): Path to the file or directory to log.
+        artifact_subdir (str, optional): Subdirectory within the artifacts.
+    """
+    if artifact_subdir:
+        mlflow.log_artifact(local_path, artifact_path=artifact_subdir)
+    else:
+        mlflow.log_artifact(local_path)
+
+
 def end_run():
     """End the active MLflow run."""
     mlflow.end_run()

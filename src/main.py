@@ -116,21 +116,21 @@ def main():
     # Tune XGBoost
     print("🎯 Tuning XGBoost...")
     xgb_study = optuna.create_study(direction="maximize")
-    xgb_study.optimize(lambda trial: tune_xgboost(trial, X_train_bal, X_test, y_train_bal_encoded, y_test_encoded), n_trials=1)
+    xgb_study.optimize(lambda trial: tune_xgboost(trial, X_train_bal, X_test, y_train_bal_encoded, y_test_encoded), n_trials=10)
     best_params['xgb'] = xgb_study.best_params
     print(f"✅ Best XGB params: {best_params['xgb']}")
 
     # Tune CatBoost
     print("🎯 Tuning CatBoost...")
     cat_study = optuna.create_study(direction="maximize")
-    cat_study.optimize(lambda trial: tune_catboost(trial, X_train_bal, X_test, y_train_bal_encoded, y_test_encoded), n_trials=1)
+    cat_study.optimize(lambda trial: tune_catboost(trial, X_train_bal, X_test, y_train_bal_encoded, y_test_encoded), n_trials=10)
     best_params['cat'] = cat_study.best_params
     print(f"✅ Best CatBoost params: {best_params['cat']}")
 
     # Tune Random Forest
     print("🎯 Tuning Random Forest...")
     rf_study = optuna.create_study(direction="maximize")
-    rf_study.optimize(lambda trial: tune_random_forest(trial, X_train_bal, X_test, y_train_bal_encoded, y_test_encoded), n_trials=1)
+    rf_study.optimize(lambda trial: tune_random_forest(trial, X_train_bal, X_test, y_train_bal_encoded, y_test_encoded), n_trials=10)
     best_params['rf'] = rf_study.best_params
     print(f"✅ Best RF params: {best_params['rf']}")
 
