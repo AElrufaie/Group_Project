@@ -24,6 +24,7 @@ def test_prepare_dataframes():
         'outcome_type': ['Adoption', 'Adoption'],
         'outcome_subtype': ['Foster', 'Foster'],
         'animal_type': ['Dog', 'Cat'],
+        'name': ['Doggo', 'Kitty'],
         'sex_upon_outcome': ['Neutered Male', 'Spayed Female'],
         'age_upon_outcome': ['2 years', '1 year'],
         'breed': ['Labrador Mix', 'Siamese'],
