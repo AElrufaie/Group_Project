@@ -83,7 +83,7 @@ def main():
         df1, treatment, outcome, common_causes
     )
 
-    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}") *)
+    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
 
     # --- Step 3: Encoding ---
     # print("🔤 Applying encoding...")
