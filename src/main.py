@@ -155,11 +155,31 @@ def main():
 
 
 
-    # --- Step 8: Clustering ---
-    print("🔍 Running K-Prototypes clustering...")
+  # --- Step 8: Clustering ---
+    print("🔍 Running K-Prototypes clustering on full clean dataset...")
+
     numerical_features = ["los_at_shelter", "age_days_outcome"]
-    categorical_features = ["animal_type", "color_group", "breed_type"]
-    clusters, kproto_model = run_kprototypes(X_train_full, numerical_features, categorical_features)
+    categorical_features = ["animal_type", "has_name", "age_group_intake", 
+                        "month_of_outcome", "is_fixed", "breed_type", 
+                        "color_group", "intake_condition_group"]
+
+    clusters, kproto_model = run_kprototypes(df, numerical_features, categorical_features)
+
+    # Save the clustered dataset
+    df['kprototypes_cluster'] = clusters
+    df.to_csv(os.path.join(DATA_FOLDER, "animal_df_with_clusters.csv"), index=False)
+    print("✅ Clustered data saved as 'animal_df_with_clusters.csv'")
+
+    # ✅ Compute silhouette score manually here
+    from sklearn.metrics import silhouette_score
+
+    silhouette = silhouette_score(
+        df[numerical_features],  # only numerical features
+        clusters,
+        metric="euclidean"
+    )
+
+    print(f"✅ Silhouette Score for Clustering: {silhouette:.4f}")
 
     print("\n🎯 FULL PIPELINE SUCCESSFULLY COMPLETED. 🚀")
 
