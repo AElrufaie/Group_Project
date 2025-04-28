@@ -1,3 +1,4 @@
+import pandas as pd
 from src.preprocessing.preprocessing import prepare_dataframes
 
 def test_prepare_dataframes():
