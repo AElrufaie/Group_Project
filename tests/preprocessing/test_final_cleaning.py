@@ -1,3 +1,4 @@
+import pandas as pd
 from src.preprocessing.preprocessing import final_cleaning
 
 def test_final_cleaning():
