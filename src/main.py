@@ -70,27 +70,23 @@ def main():
 
     print(f"✅ Preprocessing complete. Dataset shape: {df.shape}")
 
-    # --- Step 2: Causal Inference ---
-    print("🧠 Running causal inference analysis...")
+    # # --- Step 2: Causal Inference ---
+    # print("🧠 Running causal inference analysis...")
 
-    df1 = pd.read_csv("data/animal_df.csv")
+    # df1 = pd.read_csv("data/animal_df.csv")
 
-    treatment = "age_days_outcome"
-    outcome = "los_at_shelter"
-    common_causes = ["animal_type", "breed_type", "intake_condition_group"]
+    # treatment = "age_days_outcome"
+    # outcome = "los_at_shelter"
+    # common_causes = ["animal_type", "breed_type", "intake_condition_group"]
 
-    causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
-        df1, treatment, outcome, common_causes
-    )
+    # causal_estimate, refutation_placebo, refutation_random, refutation_subset = causal_inference_pipeline(
+    #     df1, treatment, outcome, common_causes
+    # )
 
-    print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
+    # print(f"✅ Final Causal Effect Estimate: {causal_estimate.value}")
 
     # --- Step 3: Encoding ---
     print("🔤 Applying encoding...")
-
-    # df = df.drop(columns=["animal_id"])
-    print(df.columns)
-
     
     label_encode_cols = [
         'age_group_intake', 'breed_type', 'color_group', 
@@ -107,6 +103,12 @@ def main():
     X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
+
+
+    # Find which columns contain 'A906892'
+    for col in X_train_full.columns:
+        if X_train_full[col].astype(str).str.contains('A906892').any():
+            print(f"Value 'A906892' found in column: {col}")
 
     # Apply SMOTE-Tomek
     print("🔧 Applying SMOTE-Tomek...")
