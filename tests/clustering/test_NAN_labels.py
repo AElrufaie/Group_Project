@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 def test_no_nan_in_clusters():
     df = pd.DataFrame({
         'los_at_shelter': np.random.randint(1, 30, 50),
