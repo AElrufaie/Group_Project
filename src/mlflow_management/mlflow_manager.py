@@ -1,8 +1,9 @@
 # src/mlflow_management/mlflow_manager.py
-
 import mlflow
 import mlflow.sklearn
 from mlflow.models.signature import infer_signature
+
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
 
 def start_run(run_name: str = None):
     """Start a new MLflow run."""
