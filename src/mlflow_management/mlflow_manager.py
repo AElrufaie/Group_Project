@@ -4,6 +4,7 @@ import mlflow
 import mlflow.sklearn
 from mlflow.models.signature import infer_signature
 
+# Set the tracking URI dynamically (for Docker or local)
 mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000"))
 
 def start_run(run_name: str = None):
@@ -18,33 +19,29 @@ def log_metrics(metrics: dict):
     """Log metrics to MLflow."""
     mlflow.log_metrics(metrics)
 
-import mlflow
-import mlflow.sklearn
-from mlflow.models import infer_signature
-
 def log_model(model, model_name: str = "model", X_train=None, y_train=None):
     """
     Log a trained model to MLflow with optional input signature and input example.
-    
+
     Args:
         model: Trained model object (e.g., sklearn model).
-        model_name (str, optional): Name of the model artifact.
-        X_train: Optional training features for signature and example.
-        y_train: Optional training labels for signature.
+        model_name (str): Artifact path name.
+        X_train: Optional training features (for signature).
+        y_train: Optional training labels (for signature).
     """
     if X_train is not None and y_train is not None:
         X_train_safe = X_train.copy()
-        
-        # --- Convert all integer columns to float64
+
+        # Convert integer columns to float64 for signature compatibility
         for col in X_train_safe.select_dtypes(include=['int']).columns:
             X_train_safe[col] = X_train_safe[col].astype('float64')
 
-
+        # Create signature and input example
         signature = infer_signature(X_train_safe, y_train)
-        input_example = X_train_safe.sample(1).to_dict(orient="records")[0]
+        input_example = X_train_safe.sample(1)
 
         mlflow.sklearn.log_model(
-            model,
+            sk_model=model,
             artifact_path=model_name,
             signature=signature,
             input_example=input_example
@@ -64,7 +61,6 @@ def log_artifact(local_path: str, artifact_subdir: str = None):
         mlflow.log_artifact(local_path, artifact_path=artifact_subdir)
     else:
         mlflow.log_artifact(local_path)
-
 
 def end_run():
     """End the active MLflow run."""
