@@ -44,9 +44,10 @@ def tune_xgboost(trial, X_train, X_test, y_train, y_test):
         'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
         'gamma': trial.suggest_float('gamma', 0.0, 5.0),
         'subsample': trial.suggest_float('subsample', 0.5, 1.0),
-        'tree_method': 'gpu_hist',        # GPU acceleration
-        'predictor': 'gpu_predictor',     # GPU prediction
-        'gpu_id': 0                       # Use GPU 0
+        'tree_method': 'hist',           # Use histogram-based algorithm on CPU
+        'predictor': 'cpu_predictor',    # Force CPU prediction
+        'device': 'cpu'                  # Make it very explicit
+                     # Use GPU 0
     }
 
     model = XGBClassifier(**params, use_label_encoder=False, random_state=42, eval_metric='logloss')
@@ -75,7 +76,7 @@ def tune_lightgbm(trial, X_train, X_test, y_train, y_test):
         'bagging_fraction': trial.suggest_float('bagging_fraction', 0.4, 1.0),
         'bagging_freq': trial.suggest_int('bagging_freq', 1, 7),
         'min_child_samples': trial.suggest_int('min_child_samples', 5, 100),
-        'device': 'gpu'      # GPU acceleration
+        'device': 'cpu'      # GPU acceleration
     }
 
     model = LGBMClassifier(**params, random_state=42, n_estimators=100)
@@ -123,8 +124,7 @@ def tune_catboost(trial, X_train, X_test, y_train, y_test):
         'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1, 10),
         'bagging_temperature': trial.suggest_float('bagging_temperature', 0, 1),
         'iterations': trial.suggest_int('iterations', 100, 1000),
-        'task_type': 'GPU',   # GPU acceleration
-        'devices': '0'        # GPU 0
+        'task_type': 'CPU'   # GPU acceleration
     }
 
     model = CatBoostClassifier(**params, random_seed=42, verbose=0, eval_metric='Accuracy')
