@@ -16,3 +16,6 @@ kmodes
 joblib
 requests
 pytest
+torch
+torchvision
+torchaudio
