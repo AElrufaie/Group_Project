@@ -1,18 +1,45 @@
-# Ignore the virtual environment folder
-is2_env/
-
-# Ignore Python cache files
+# Python standard
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.log
 
-# Ignore Jupyter Notebook checkpoints (if you use notebooks)
+# Virtual environment
+is2_env/
+venv/
+env/
+
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Ignore MLflow temporary stuff (optional if you use MLflow)
+# Local MLflow runs
 mlruns/
+mlflow.db
 
-# Ignore system files (Mac and Windows)
+# Data outputs
+*.csv
+*.tsv
+*.parquet
+*.h5
+*.db
+
+# Model outputs
+*.pkl
+*.joblib
+*.pt
+*.h5
+
+# CatBoost training logs
+catboost_info/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
 .DS_Store
 Thumbs.db
+
+# VSCode/IDE settings
+.vscode/
+.idea/
