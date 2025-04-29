@@ -9,6 +9,8 @@ from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
 from tqdm import tqdm
+import os
+import joblib
 
 # Meta-Models
 def get_meta_models():
@@ -36,6 +38,10 @@ def get_base_model_combinations(best_params_dict):
 # Train and Evaluate Stacking
 def train_and_evaluate_stacking_models(meta_models, base_model_combinations, X_train, y_train, X_test, y_test):
     stacking_results = {}
+
+    # Create 'saved_models' folder if it does not exist
+    saved_models_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "saved_models")
+    os.makedirs(saved_models_dir, exist_ok=True)
 
     for meta_name, meta_model in meta_models.items():
         for i, base_models in enumerate(base_model_combinations):
@@ -89,8 +95,14 @@ def train_and_evaluate_stacking_models(meta_models, base_model_combinations, X_t
             }
             mf_manager.log_metrics(metrics_to_log)
 
-            # Log model
+            # Log model to MLflow
             mf_manager.log_model(stacking_clf, model_name="stacking_model", X_train=X_train, y_train=y_train)
+
+            # Save model as local .pkl file
+            model_filename = f"stacking_{meta_name.replace(' ', '_')}_combination_{i+1}.pkl"
+            model_save_path = os.path.join(saved_models_dir, model_filename)
+            joblib.dump(stacking_clf, model_save_path, compress=3)
+            print(f"✅ Model saved locally at: {model_save_path}")
 
             # End MLflow run
             mf_manager.end_run()

@@ -13,6 +13,9 @@ __pycache__/
 # Ignore MLflow temporary stuff (optional if you use MLflow)
 mlruns/
 
+# Ignore saved models (local .pkl files)
+saved_models/
+
 # Ignore system files (Mac and Windows)
 .DS_Store
 Thumbs.db
