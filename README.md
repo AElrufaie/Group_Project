@@ -1,6 +1,6 @@
- IS2 Group Project: Animal Shelter Data Pipeline & Serving API
+# IS2 Group Project: Animal Shelter Data Pipeline & Serving API
 
- Project Overview
+ ## Project Overview
 
 This repository extends the previous IS2 group project by not only building a robust end-to-end machine learning pipeline but also containerizing the prediction API using Docker. The project uses animal shelter data to perform data processing, clustering, modeling, explainability, and causal inference. In this version, we've also introduced:
 
@@ -12,9 +12,9 @@ docker-compose setup for reproducibility.
 
 GitHub CI/CD checks and Pytest coverage.
 
- Key Features
+ ## Key Features
 
- Pipeline
+ ### Pipeline
 
 All steps from data_drafting → preprocessing → clustering → modeling → causal_inference → SHAP_value are orchestrated in src/main.py.
 
@@ -22,7 +22,7 @@ Model training includes ensemble and stacking approaches.
 
 Tracked using MLflow, also launched via docker-compose.
 
- Serving API (FastAPI)
+ ### Serving API (FastAPI)
 
 Separate FastAPI app for serving predictions.
 
@@ -32,7 +32,7 @@ Separate FastAPI app for serving predictions.
 
 /predict: Accepts cleaned input and returns prediction.
 
-Dockerized and runnable via:
+## Dockerized and runnable via:
 
 # From project root
 $ docker build -f serve_model.Dockerfile -t fastapi-serve-app .
@@ -54,25 +54,8 @@ Runs pipeline with MLflow URI linked.
 
 docker-compose up --build
 
- Project Structure (Selected)
 
-.
-├── src/
-│   ├── causal_inference/
-│   ├── clustering/
-│   ├── modeling/
-│   ├── preprocessing/
-│   ├── mlflow_management/
-│   ├── SHAP_value/
-│   └── main.py
-├── serve_model.py
-├── serve_model.Dockerfile
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── .gitignore
-
- Testing and CI/CD
+ ## Testing and CI/CD
 
 Unit tests in tests/
 
@@ -80,7 +63,7 @@ Enforced with Pytest
 
 GitHub Actions CI pipeline runs tests on push
 
- Future Enhancements
+## Future Enhancements
 
 Add authentication layer to API.
 
